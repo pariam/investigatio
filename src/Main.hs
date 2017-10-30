@@ -62,12 +62,15 @@ type API =
     Get '[PlainText] BEncodeResponse
 
 failure :: String -> BEncodeResponse
-failure s = BEncodeResponse (BDict (L.fromList [("failure reason", BString (C8.pack s))]))
+failure s =
+  BEncodeResponse (BDict (L.fromList [("failure reason", BString (C8.pack s))]))
 
 sampleResponseSuccess :: BEncodeResponse
 sampleResponseSuccess = BEncodeResponse (BDict (L.fromList [ ("interval", BInt 30)
-                                                           , ("peers", BString (fromJust $ ipAndPortToByteString "127.0.0.1" 6916))
+                                                           , ("peers", BString peers)
                                                            ]))
+  where
+    peers = fromJust $ ipAndPortToByteString "127.0.0.1" 6916
 
 server :: Server API
 server =
