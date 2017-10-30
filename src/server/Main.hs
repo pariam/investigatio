@@ -2,28 +2,15 @@ module Main where
 
 import Control.Monad.IO.Class
 import Data.BEncode
-import qualified Data.ByteString.Builder as B
 import qualified Data.ByteString.Lazy.Char8 as C8
-import qualified Data.ByteString.Lazy as B
-import Data.IP
 import Data.Maybe (fromJust) -- JUST FOR TESTING!
 import qualified Data.Map.Lazy as L
-import Network.Socket (hostAddressToTuple)
 import Network.Wai
 import Network.Wai.Handler.Warp
 import Servant
-import Text.Read (readMaybe)
 
+import Pariam.Investigo.Compact
 import Pariam.Investigo.Types
-
-ipAndPortToByteString :: String -> Integer -> Maybe B.ByteString
-ipAndPortToByteString ip port = do
-  ipv4 <- readMaybe ip :: Maybe IPv4
-  let (a,b,c,d) = hostAddressToTuple . toHostAddress $ ipv4
-      ipBS = B.pack [a, b, c, d]
-      portBS = B.toLazyByteString . B.word16BE . fromIntegral $ port
-  return (B.append ipBS portBS)
-
 
 failure :: String -> BEncodeResponse
 failure s =
