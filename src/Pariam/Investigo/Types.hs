@@ -1,6 +1,16 @@
 {-# LANGUAGE DataKinds #-}
 {-# LANGUAGE MultiParamTypeClasses #-}
 {-# LANGUAGE TypeOperators #-}
+--------------------------------------------------------------------
+-- |
+-- Copyright :  (c) 2017 Ricky Elrod
+-- License   :  BSD3
+-- Maintainer:  Ricky Elrod <ricky@elrod.me>
+-- Stability :  experimental
+-- Portability: non-portable
+--
+-- This module provides types used throughout Investigo.
+--------------------------------------------------------------------
 module Pariam.Investigo.Types where
 
 import Data.BEncode

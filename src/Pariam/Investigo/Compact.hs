@@ -1,3 +1,14 @@
+--------------------------------------------------------------------
+-- |
+-- Copyright :  (c) 2017 Ricky Elrod
+-- License   :  BSD3
+-- Maintainer:  Ricky Elrod <ricky@elrod.me>
+-- Stability :  experimental
+-- Portability: non-portable
+--
+-- This module provides utility functions for dealing with clients which request
+-- a compact representation of the peer list.
+--------------------------------------------------------------------
 module Pariam.Investigo.Compact where
 
 import qualified Data.ByteString.Builder as B
