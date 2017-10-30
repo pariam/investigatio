@@ -36,6 +36,19 @@ instance FromHttpApiData OneOrZero where
     | t == T.pack "0" = Right Zero
     | otherwise = Left . T.pack $ "field must be 1 or 0"
 
+-- | When a client hits the announce url to stop, start, or complete, a torrent,
+-- it will include an @event@ queryparam. If it doesn't, or if it's empty, then
+-- it is a normal interval-checkin. Otherwise it must be either \"started\",
+-- \"stopped\", or \"completed\".
+data Event = Started | Stopped | Completed deriving (Eq, Show)
+
+instance FromHttpApiData Event where
+  parseQueryParam t
+    | t == T.pack "started" = Right Started
+    | t == T.pack "stopped" = Right Stopped
+    | t == T.pack "completed" = Right Completed
+    | otherwise = Left . T.pack $ "event field is malformed"
+
 -- | Structure of an announcement request from a client.
 data AnnounceRequest =
   AnnounceRequest { infoHash   :: Maybe String
@@ -46,7 +59,7 @@ data AnnounceRequest =
                   , left       :: Maybe Integer
                   , compact    :: Maybe OneOrZero
                   , noPeerId   :: Maybe OneOrZero
-                  , event      :: Maybe String
+                  , event      :: Maybe Event
                   , ip         :: Maybe String
                   , numwant    :: Maybe Integer
                   , key        :: Maybe String
@@ -63,7 +76,7 @@ type API =
     QueryParam "left" Integer :>
     QueryParam "compact" OneOrZero :>
     QueryParam "no_peer_id" OneOrZero :>
-    QueryParam "event" String :>
+    QueryParam "event" Event :>
     QueryParam "ip" String :>
     QueryParam "numwant" Integer :>
     QueryParam "key" String :>

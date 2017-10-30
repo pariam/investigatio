@@ -33,7 +33,7 @@ announce
   -> Maybe Integer
   -> Maybe OneOrZero
   -> Maybe OneOrZero
-  -> Maybe String
+  -> Maybe Event
   -> Maybe String
   -> Maybe Integer
   -> Maybe String
