@@ -61,7 +61,6 @@ announce ih pid port up down left compact npi event ip numwant key tid = do
 server :: Server API
 server =
   announce
-  where
 
 api :: Proxy API
 api = Proxy
