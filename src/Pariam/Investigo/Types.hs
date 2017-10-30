@@ -16,7 +16,6 @@ module Pariam.Investigo.Types where
 import Data.BEncode
 import qualified Data.Text as T
 import Servant
-import Web.HttpApiData
 
 -- | This type denotes a response that has been bencoded.
 --
