@@ -44,8 +44,8 @@ announce
   -> Maybe Integer
   -> Maybe Integer
   -> Maybe Integer
-  -> Maybe Bool
-  -> Maybe Bool
+  -> Maybe OneOrZero
+  -> Maybe OneOrZero
   -> Maybe String
   -> Maybe String
   -> Maybe Integer
