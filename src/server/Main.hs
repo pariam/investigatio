@@ -2,7 +2,6 @@ module Main where
 
 import Control.Monad.IO.Class
 import Data.BEncode
-import qualified Data.ByteString.Lazy.Char8 as C8
 import Data.Maybe (fromJust) -- JUST FOR TESTING!
 import qualified Data.Map.Lazy as L
 import Network.Wai
@@ -11,10 +10,6 @@ import Servant
 
 import Pariam.Investigo.Compact
 import Pariam.Investigo.Types
-
-failure :: String -> BEncodeResponse
-failure s =
-  BEncodeResponse (BDict (L.fromList [("failure reason", BString (C8.pack s))]))
 
 sampleResponseSuccess :: BEncodeResponse
 sampleResponseSuccess =

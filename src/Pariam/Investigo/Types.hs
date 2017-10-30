@@ -14,8 +14,12 @@
 module Pariam.Investigo.Types where
 
 import Data.BEncode
+import qualified Data.ByteString.Lazy.Char8 as C8
+import qualified Data.Map.Lazy as L
 import qualified Data.Text as T
 import Servant
+
+import Pariam.Investigo.BEncode
 
 -- | This type denotes a response that has been bencoded.
 --
@@ -65,6 +69,15 @@ data AnnounceRequest =
                   , key        :: Maybe String
                   , trackerid  :: Maybe String
                   } deriving (Eq, Show)
+
+-- | Response to announce request.
+data AnnounceResponse =
+    Failure { failureReason :: String }
+    deriving (Eq, Show)
+
+instance BEncodable AnnounceResponse where
+  bencode (Failure s) =
+    BDict (L.fromList [("failure reason", BString (C8.pack s))])
 
 type API =
   "announce" :>
