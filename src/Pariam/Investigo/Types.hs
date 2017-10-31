@@ -70,14 +70,48 @@ data AnnounceRequest =
                   , trackerid  :: Maybe String
                   } deriving (Eq, Show)
 
+-- | This represents a peer in the verbose (dictionary) representation.
+data Peer = Peer { peerPeerId :: String
+                 , peerIp :: String
+                 , peerPort :: Integer
+                 } deriving (Eq, Show)
+
+instance BEncodable Peer where
+  bencode (Peer id' ip' port') =
+    BDict (L.fromList [ ("peer id", BString (C8.pack id'))
+                      , ("ip", BString (C8.pack ip'))
+                      , ("port", BInt port')
+                      ])
+
+-- | The list of peers can be represented compactly or verbosely.
+--
+-- We support both.
+data PeerList =
+    VerbosePeerList [Peer]
+  | CompactPeerList String
+  deriving (Eq, Show)
+
+instance BEncodable PeerList where
+  bencode (VerbosePeerList l) = BList (fmap bencode l)
+  bencode (CompactPeerList l) = BString (C8.pack l)
+
 -- | Response to announce request.
 data AnnounceResponse =
     Failure { failureReason :: String }
+  | Response { warning :: Maybe String
+             , interval :: Integer
+             , minInterval :: Maybe Integer
+             , arTrackerId :: Maybe String
+             , complete :: Integer
+             , incomplete :: Integer
+             , peers :: PeerList
+             }
     deriving (Eq, Show)
 
 instance BEncodable AnnounceResponse where
   bencode (Failure s) =
     BDict (L.fromList [("failure reason", BString (C8.pack s))])
+  -- TODO: bencode AnnounceResponse/Response
 
 type API =
   "announce" :>
