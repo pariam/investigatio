@@ -20,6 +20,7 @@ import qualified Data.Text as T
 import Servant
 
 import Pariam.Investigo.BEncode
+import Pariam.Investigo.Metadata.Types
 
 -- | This type denotes a response that has been bencoded.
 --
@@ -70,31 +71,6 @@ data AnnounceRequest =
                   , trackerid  :: Maybe String
                   } deriving (Eq, Show)
 
--- | This represents a peer in the verbose (dictionary) representation.
-data Peer = Peer { peerPeerId :: String
-                 , peerIp :: String
-                 , peerPort :: Integer
-                 } deriving (Eq, Show)
-
-instance BEncodable Peer where
-  bencode (Peer id' ip' port') =
-    BDict (L.fromList [ ("peer id", BString (C8.pack id'))
-                      , ("ip", BString (C8.pack ip'))
-                      , ("port", BInt port')
-                      ])
-
--- | The list of peers can be represented compactly or verbosely.
---
--- We support both.
-data PeerList =
-    VerbosePeerList [Peer]
-  | CompactPeerList String
-  deriving (Eq, Show)
-
-instance BEncodable PeerList where
-  bencode (VerbosePeerList l) = BList (fmap bencode l)
-  bencode (CompactPeerList l) = BString (C8.pack l)
-
 -- | Response to announce request.
 data AnnounceResponse =
     Failure { failureReason :: String }
@@ -111,7 +87,8 @@ data AnnounceResponse =
 instance BEncodable AnnounceResponse where
   bencode (Failure s) =
     BDict (L.fromList [("failure reason", BString (C8.pack s))])
-  -- TODO: bencode AnnounceResponse/Response
+  --
+
 
 type API =
   "announce" :>
