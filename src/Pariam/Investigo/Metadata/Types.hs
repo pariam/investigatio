@@ -1,4 +1,6 @@
+{-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE GADTs #-}
+{-# LANGUAGE TemplateHaskell #-}
 --------------------------------------------------------------------
 -- |
 -- Copyright :  (c) 2017 Ricky Elrod
@@ -22,6 +24,8 @@
 --------------------------------------------------------------------
 module Pariam.Investigo.Metadata.Types where
 
+import Control.Monad.Free
+import Control.Monad.Free.TH
 import Data.BEncode
 import qualified Data.ByteString.Lazy.Char8 as C8
 import qualified Data.Map.Lazy as L
@@ -62,8 +66,18 @@ data Metadata =
            , metadataPeers :: [Peer]
            } deriving (Eq, Show)
 
-data MetadataOp where
-  MetadataFetch :: InfoHash -> MetadataOp
+data MetadataOpF md next where
+  MetadataFetch :: InfoHash -> (Maybe md -> next) -> MetadataOpF md next
+  MetadataUpdate :: (md -> md) -> next -> MetadataOpF md next
 
-instance Show MetadataOp where
-  show (MetadataFetch ih) = "MetadataFetch (" ++ show ih ++ ")"
+instance Functor (MetadataOpF md) where
+  fmap f (MetadataFetch i g) = MetadataFetch i (f . g)
+  fmap f (MetadataUpdate uf n) = MetadataUpdate uf (f n)
+
+instance Show (MetadataOpF md next) where
+  show (MetadataFetch ih _) = "MetadataFetch (" ++ show ih ++ ")"
+  show (MetadataUpdate _ _) = "MetadataUpdate"
+
+makeFree ''MetadataOpF
+
+type MetadataOp = Free (MetadataOpF Metadata)

@@ -21,6 +21,7 @@ library
                      , bencode > 0.6 && < 0.7
                      , bytestring
                      , containers
+                     , free
                      , iproute
                      , network
                      , servant > 0.9 && < 1
@@ -37,6 +38,7 @@ executable investigo
                      , bencode > 0.6 && < 0.7
                      , bytestring
                      , containers
+                     , free
                      , iproute
                      , network
                      , servant > 0.9 && < 1
