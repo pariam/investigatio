@@ -17,7 +17,12 @@
 -- on our infohash.
 --
 -- The idea is to keep things pluggable, i.e., have the data be able to be
--- stored in any number of ways.
+-- stored in any number of ways. As such, we use a free monad and allow users to
+-- supply their own interpreter describing how to obtain and update metadata.
+--
+-- Such an interpreter will most likely be a natural transformation of type
+-- @MetadataOp a -> IO a@, but in theory a non-@IO@ implementation could be
+-- supplied for testing and so on.
 --
 -- Also, we do not rely on anything in 'Pariam.Investigo.Types', so that we can
 -- re-export this module from there.
